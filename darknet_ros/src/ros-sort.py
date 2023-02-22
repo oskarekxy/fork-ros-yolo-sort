@@ -258,8 +258,10 @@ class Sort(object):
   def boxcallback(self, msg):
     dets = []
     for i in range(len(msg.bounding_boxes)):
-        bbox = msg.bounding_boxes[i]
-        dets.append(np.array([bbox.xmin, bbox.ymin, bbox.xmax, bbox.ymax, bbox.probability]))
+        if msg.bounding_boxes[i].Class =="person":
+          print("FOUND PERSON")
+          bbox = msg.bounding_boxes[i]
+          dets.append(np.array([bbox.xmin, bbox.ymin, bbox.xmax, bbox.ymax, bbox.probability]))
     self.dets = np.array(dets)
     self.bbox_checkin=1
     return
@@ -341,15 +343,15 @@ if __name__ == '__main__':
                     rgb=colours[res[4]%32,:]*255
                     cv2.rectangle(mot_tracker.img, (res[0],res[1]), (res[2],res[3]), (rgb[0],rgb[1],rgb[2]), 2)
                     cv2.putText(mot_tracker.img, "ID : %d"%(res[4]), (res[0],res[1]), cv2.FONT_HERSHEY_SIMPLEX, 1.6, (200,85,200), 2)
-                    print("PRINT IMAGE")
+                    # print("PRINT IMAGE")
                     cv2.imshow("tracker",mot_tracker.img)
                     cv2.waitKey(1)
                    
-                    print("AFTER PRINT IMAGE")
+                    # print("AFTER PRINT IMAGE")
             if mot_tracker.img_in==1 and mot_tracker.display:
 
               
-              #WYSYLANIE NA TOPIC
+              #WYSYLANIE NA TOPIC obrazu
                 # try : 
               # mot_tracker.image = mot_tracker.bridge.cv2_to_imgmsg(mot_tracker.img, "bgr8")
               # mot_tracker.image.header.stamp = rospy.Time.now()
